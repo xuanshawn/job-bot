@@ -82,7 +82,7 @@ def main():
     )
     parser.add_argument("keyword", help="search keyword, e.g. 'data engineer'")
     parser.add_argument("--location", default=None, help="optional location filter")
-    parser.add_argument("--results", type=int, default=100, help="results per site")
+    parser.add_argument("--results", type=int, default=20, help="results per site")
     parser.add_argument("--out", default=None, help="output CSV path")
     args = parser.parse_args()
 
@@ -121,8 +121,9 @@ def main():
     else:
         slug = re.sub(r"[^a-z0-9]+", "-", args.keyword.lower()).strip("-")
         stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-        os.makedirs("output", exist_ok=True)
-        out_path = os.path.join("output", f"jobs_{slug}_{stamp}.csv")
+        role_dir = os.path.join("roles", slug)
+        os.makedirs(role_dir, exist_ok=True)
+        out_path = os.path.join(role_dir, f"jobs_{stamp}.csv")
     combined.to_csv(out_path, index=False)
 
     summary = ", ".join(f"{site}: {n}" for site, n in counts.items())
